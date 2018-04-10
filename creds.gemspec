@@ -10,7 +10,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Shorter, env-scoped version of Rails' credentials"
   spec.description   = ''
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/mikker/rails-creds'
+  spec.metadata     = { 'source_code_uri' => 'https://github.com/mikker/rails-creds' }
   spec.license       = 'MIT'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
