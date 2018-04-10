@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'creds/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'creds'
+  spec.name          = 'rails-creds'
   spec.version       = Creds::VERSION
   spec.authors       = ['Mikkel Malmberg']
   spec.email         = ['mikkel@brnbw.com']
