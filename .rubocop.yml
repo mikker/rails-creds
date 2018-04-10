@@ -1,0 +1,7 @@
+AllCops:
+  Exclude:
+    - 'creds.gemspec'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
