@@ -17,19 +17,19 @@ class Creds
     MESSAGE = <<-MSG
   Creds scopes credentials to the current Rails environment.
   It seems you are missing a scope for the environment "%<env>s".
-
+  
   Here's an example of how your credentials could look:
-
+  
   ---
   default: &default
     aws_key: 'shared between environments'
-
+  
   development:
     <<: *default
-
+  
   test:
     <<: *default
-
+  
   production:
     <<: *default
     aws_key: 'you can override defaults for individual environments'
