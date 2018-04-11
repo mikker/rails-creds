@@ -1,5 +1,7 @@
 <h1><img src='https://s3.brnbw.com/logo-2x-SiurkO6hTL.png' alt='' width='220' /></h1>
 
+[![Build Status](https://travis-ci.org/mikker/rails-creds.svg?branch=master)](https://travis-ci.org/mikker/rails-creds) [![Gem version](https://img.shields.io/gem/v/rails-creds.svg)](https://rubygems.org/gems/rails-creds)
+
 `Creds` is both **a)** a shortcut for the dreadfully long `Rails.application.credentials` and **b)** bringing environment scoping back (from when it was called _secrets_).
 
 ## Usage
