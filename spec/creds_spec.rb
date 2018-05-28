@@ -46,6 +46,28 @@ RSpec.describe Creds do
     expect(Creds.to_h).to eq(super_secret: 'shh!')
   end
 
+  it 'logs and returns null creds when no encrypted credentials' do
+    allow(File).to receive(:exist?)
+      .with(Rails.root.join('config/credentials.yml.enc')) { false }
+    expect(Rails.logger).to receive(:warn)
+      .with(Creds::MissingCredentialsWarning)
+
+    result = Creds.some_key
+
+    expect(result).to be nil
+  end
+
+  it 'raises with special error when credentials exist but key is missing' do
+    allow(File).to receive(:exist?)
+      .with(Rails.root.join('config/credentials.yml.enc')) { true }
+    allow(File).to receive(:exist?)
+      .with(Rails.root.join('config/master.key')) { false }
+
+    expect do
+      Creds.some_key
+    end.to raise_error(Creds::MissingMasterKeyError)
+  end
+
   def write_config(conf)
     Rails.application.credentials.change do |path|
       File.open(path, 'w') { |f| f.write(conf.to_yaml) }
