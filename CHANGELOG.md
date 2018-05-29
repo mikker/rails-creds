@@ -1,3 +1,9 @@
+# 0.2.1
+
+Changed:
+
+  - Credentials are now memoized after successful read.
+
 # 0.2.0
 
 Changed:
