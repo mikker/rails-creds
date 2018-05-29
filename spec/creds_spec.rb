@@ -15,6 +15,9 @@ RSpec.describe Creds do
 
     RailsTestApp.initialize!
 
+    # reset cache
+    Creds.instance.instance_variable_set(:@credentials, nil)
+
     write_config({})
   end
 

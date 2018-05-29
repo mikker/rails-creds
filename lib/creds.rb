@@ -39,6 +39,8 @@ class Creds
   end
 
   def credentials
+    return @credentials if @credentials
+
     unless encrypted_credentials_exist?
       Rails.logger.warn MissingCredentialsWarning
       return NullCredentials.new
@@ -46,7 +48,7 @@ class Creds
 
     raise MissingMasterKeyError unless master_key_present?
 
-    fetch_credentials_for_current_env
+    @credentials = fetch_credentials_for_current_env
   end
 
   private
