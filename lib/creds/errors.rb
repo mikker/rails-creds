@@ -6,8 +6,7 @@ class Creds
       Creds will return nil for any key.
       Run this to generate your credentials file:
         $ bin/rails credentials:edit
-      MSG
-        .strip_heredoc.freeze
+      MSG.freeze
   end
 
   # @api private
@@ -42,8 +41,7 @@ class Creds
   production:
     <<: *default
     aws_key: 'you can override defaults for individual environments'
-      MSG
-        .strip_heredoc.freeze
+      MSG.freeze
     # rubocop:enable Layout/TrailingWhitespace
 
     def initialize(env)
@@ -59,8 +57,7 @@ class Creds
 
         Either get or recover the file config/master.key
         or set the environment variable RAILS_MASTER_KEY
-      MSG
-        .strip_heredoc.freeze
+      MSG.freeze
 
     def initalize
       super(MESSAGE)
