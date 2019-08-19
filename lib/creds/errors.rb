@@ -1,3 +1,5 @@
+require "active_support/core_ext/string/strip"
+
 class Creds
   class MissingCredentialsWarning
     MESSAGE =
