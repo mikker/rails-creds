@@ -1,3 +1,9 @@
+# 0.2.3 (2019-08-19)
+
+Fixed:
+
+  - Require strip_heredoc extension before use
+
 # 0.2.1
 
 Changed:
