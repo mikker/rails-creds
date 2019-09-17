@@ -58,7 +58,10 @@ class Creds
   private
 
   def fetch_credentials_for_current_env
-    Rails.application.credentials.fetch(Rails.env.to_sym)
+    base = Rails.application.credentials.config
+    scoped = base.fetch(Rails.env.to_sym)
+    base.delete(Rails.env.to_sym)
+    base.merge(scoped)
   rescue KeyError
     raise MissingEnvError, Rails.env
   end
@@ -70,6 +73,7 @@ class Creds
   def master_key_present?
     return true if ENV["RAILS_MASTER_KEY"]
     return true if File.exist?(Rails.root.join("config", "master.key"))
+
     false
   end
 end
