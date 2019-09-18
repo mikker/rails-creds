@@ -32,14 +32,7 @@ class Creds
   Here's an example of how your credentials could look:
 
   ---
-  default: &default
-    aws_key: 'shared between environments'
-  
-  development:
-    <<: *default
-  
-  test:
-    <<: *default
+  aws_key: 'shared between environments'
   
   production:
     <<: *default

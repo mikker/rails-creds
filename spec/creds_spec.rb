@@ -34,6 +34,11 @@ RSpec.describe Creds do
     expect(Creds.super_secret).to eq("shh!")
   end
 
+  it "merges top-level credentials" do
+    write_config(super_secret: "shh!", test: {other_secret: "SHH!"})
+    expect(Creds.super_secret).to eq("shh!")
+  end
+
   it "raises MissingKeyError on missing keys" do
     write_config(test: {super_secret: "shh!"})
     expect { Creds.non_existing_key }.to raise_error(Creds::MissingKeyError)

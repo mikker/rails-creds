@@ -10,17 +10,9 @@ Given encrypted credentials looking like:
 
 ```yaml
 ---
-default: &default
-  super_secret: 'shared between environments'
-
-development:
-  <<: *default
-
-test:
-  <<: *default
+super_secret: 'shared between environments'
 
 production:
-  <<: *default
   super_secret: 'you can override defaults for individual environments'
 ```
 
