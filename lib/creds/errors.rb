@@ -1,3 +1,5 @@
+require "active_support/core_ext/string/strip"
+
 class Creds
   class MissingCredentialsWarning
     MESSAGE =
@@ -6,8 +8,8 @@ class Creds
       Creds will return nil for any key.
       Run this to generate your credentials file:
         $ bin/rails credentials:edit
-        MSG
-      .strip_heredoc.freeze
+      MSG
+        .strip_heredoc.freeze
   end
 
   # @api private
@@ -30,20 +32,13 @@ class Creds
   Here's an example of how your credentials could look:
 
   ---
-  default: &default
-    aws_key: 'shared between environments'
-  
-  development:
-    <<: *default
-  
-  test:
-    <<: *default
+  aws_key: 'shared between environments'
   
   production:
     <<: *default
     aws_key: 'you can override defaults for individual environments'
       MSG
-      .strip_heredoc.freeze
+        .strip_heredoc.freeze
     # rubocop:enable Layout/TrailingWhitespace
 
     def initialize(env)
@@ -60,7 +55,7 @@ class Creds
         Either get or recover the file config/master.key
         or set the environment variable RAILS_MASTER_KEY
       MSG
-      .strip_heredoc.freeze
+        .strip_heredoc.freeze
 
     def initalize
       super(MESSAGE)

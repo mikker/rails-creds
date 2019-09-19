@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rails'
+require "rails"
 
-require 'creds/version'
-require 'creds/errors'
+require "creds/version"
+require "creds/errors"
 
 # The main module of rails-creds
 class Creds
@@ -15,9 +15,11 @@ class Creds
       true
     end
 
+    # rubocop:disable Style/MethodMissingSuper
     def method_missing(*_args)
       nil
     end
+    # rubocop:enable Style/MethodMissingSuper
 
     def nil?
       true
@@ -28,11 +30,13 @@ class Creds
     true
   end
 
+  # rubocop:disable Style/MethodMissingSuper
   def self.method_missing(name, *_args)
     instance.credentials.fetch(name)
   rescue KeyError
     raise MissingKeyError.new(name, Rails.env)
   end
+  # rubocop:enable Style/MethodMissingSuper
 
   def self.to_h
     instance.credentials
@@ -54,18 +58,22 @@ class Creds
   private
 
   def fetch_credentials_for_current_env
-    Rails.application.credentials.fetch(Rails.env.to_sym)
+    base = Rails.application.credentials.config
+    scoped = base.fetch(Rails.env.to_sym)
+    base.delete(Rails.env.to_sym)
+    base.merge(scoped)
   rescue KeyError
     raise MissingEnvError, Rails.env
   end
 
   def encrypted_credentials_exist?
-    File.exist? Rails.root.join('config', 'credentials.yml.enc')
+    File.exist? Rails.root.join("config", "credentials.yml.enc")
   end
 
   def master_key_present?
-    return true if ENV['RAILS_MASTER_KEY']
-    return true if File.exist?(Rails.root.join('config', 'master.key'))
+    return true if ENV["RAILS_MASTER_KEY"]
+    return true if File.exist?(Rails.root.join("config", "master.key"))
+
     false
   end
 end
