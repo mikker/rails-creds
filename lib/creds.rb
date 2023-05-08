@@ -46,7 +46,7 @@ class Creds
     return @credentials if @credentials
 
     unless encrypted_credentials_exist?
-      Rails.logger.warn MissingCredentialsWarning
+      Rails.logger.warn(MissingCredentialsWarning)
       return NullCredentials.new
     end
 
@@ -67,10 +67,11 @@ class Creds
   end
 
   def encrypted_credentials_exist?
-    File.exist? Rails.root.join("config", "credentials.yml.enc")
+    File.exist?(Rails.root.join("config", "credentials.yml.enc"))
   end
 
   def master_key_present?
+    return true unless Rails.application.config.require_master_key
     return true if ENV["RAILS_MASTER_KEY"]
     return true if File.exist?(Rails.root.join("config", "master.key"))
 
