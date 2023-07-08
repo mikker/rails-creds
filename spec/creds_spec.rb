@@ -37,6 +37,14 @@ RSpec.describe Creds do
     expect(Creds.super_secret).to(eq("shh!"))
   end
 
+  it "nulls out everything when SECRET_KEY_BASE_DUMMY=1" do
+    ENV["SECRET_KEY_BASE_DUMMY"] = "1"
+    write_config(test: {super_secret: "shh!"})
+    expect(Creds.other_secret).to(be_nil)
+  ensure
+    ENV["SECRET_KEY_BASE_DUMMY"] = nil
+  end
+
   it "merges top-level credentials" do
     write_config(super_secret: "shh!", test: {other_secret: "SHH!"})
     expect(Creds.super_secret).to(eq("shh!"))
