@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rails"
 
 require "creds/version"
@@ -15,11 +13,9 @@ class Creds
       true
     end
 
-    # rubocop:disable Style/MethodMissingSuper
     def method_missing(*_args)
       nil
     end
-    # rubocop:enable Style/MethodMissingSuper
 
     def nil?
       true
@@ -30,13 +26,11 @@ class Creds
     true
   end
 
-  # rubocop:disable Style/MethodMissingSuper
   def self.method_missing(name, *_args)
     instance.credentials.fetch(name)
   rescue KeyError
     raise MissingKeyError.new(name, Rails.env)
   end
-  # rubocop:enable Style/MethodMissingSuper
 
   def self.to_h
     instance.credentials
@@ -45,9 +39,15 @@ class Creds
   def credentials
     return @credentials if @credentials
 
+    if dummy?
+      @credentials = NullCredentials.new
+      return @credentials
+    end
+
     unless encrypted_credentials_exist?
       Rails.logger.warn(MissingCredentialsWarning)
-      return NullCredentials.new
+      @credentials = NullCredentials.new
+      return @credentials
     end
 
     raise MissingMasterKeyError unless master_key_present?
@@ -76,5 +76,9 @@ class Creds
     return true if File.exist?(Rails.root.join("config", "master.key"))
 
     false
+  end
+
+  def dummy?
+    ENV.fetch("SECRET_KEY_BASE_DUMMY", nil) == "1"
   end
 end
