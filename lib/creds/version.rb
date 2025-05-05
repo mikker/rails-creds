@@ -1,3 +1,3 @@
-class Creds
-  VERSION = "0.3.0".freeze
+module Creds
+  VERSION = "0.5.0".freeze
 end

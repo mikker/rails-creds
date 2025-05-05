@@ -1,84 +1,63 @@
 require "rails"
+require "active_support/core_ext/string/strip"
 
 require "creds/version"
-require "creds/errors"
+require "creds/railtie"
 
 # The main module of rails-creds
-class Creds
-  include Singleton
+module Creds
+  EXAMPLE_CONFIG = <<-YAML
+  ---
+  secret_key_base: "abc123"
 
-  # Credentials that are always nil
-  class NullCredentials
-    def respond_to_missing?(_name)
-      true
+  shared: &shared
+    secret: 123
+
+  test:
+    <<: *shared
+
+  development:
+    <<: *shared
+
+  production:
+    <<: *shared
+    secret: 456
+  YAML
+    .strip_heredoc
+    .freeze
+
+  class MissingKeyError < StandardError
+    MESSAGE = "Key :%<key>s missing from credentials in \"%<env>s\" env".freeze
+
+    def initialize(key, env)
+      super(format(MESSAGE, key: key, env: env))
+    end
+  end
+
+  class MissingEnvError < StandardError
+    MESSAGE = <<-MSG
+      It seems you are missing a scope for the environment "%<env>s".
+
+      Here's an example of how your credentials could look:
+
+#{Creds::EXAMPLE_CONFIG.gsub(/^([^\n]+)$/m, "        \\1")}
+    MSG
+      .strip_heredoc
+      .freeze
+
+    def initialize(env)
+      super(format(MESSAGE, env: env))
+    end
+  end
+
+  def self.method_missing(mth, *args, &block)
+    @cache ||= Rails.application.credentials[Rails.env].tap do |scoped|
+      raise MissingEnvError.new(Rails.env) unless scoped.is_a?(Hash)
+      raise MissingKeyError.new(mth, Rails.env) unless scoped.key?(mth.to_sym)
+
+      scoped
     end
 
-    def method_missing(*_args)
-      nil
-    end
-
-    def nil?
-      true
-    end
-  end
-
-  def self.respond_to_missing?(_name)
-    true
-  end
-
-  def self.method_missing(name, *_args)
-    instance.credentials.fetch(name)
-  rescue KeyError
-    raise MissingKeyError.new(name, Rails.env)
-  end
-
-  def self.to_h
-    instance.credentials
-  end
-
-  def credentials
-    return @credentials if @credentials
-
-    if dummy?
-      @credentials = NullCredentials.new
-      return @credentials
-    end
-
-    unless encrypted_credentials_exist?
-      Rails.logger.warn(MissingCredentialsWarning)
-      @credentials = NullCredentials.new
-      return @credentials
-    end
-
-    raise MissingMasterKeyError unless master_key_present?
-
-    @credentials = fetch_credentials_for_current_env
-  end
-
-  private
-
-  def fetch_credentials_for_current_env
-    base = Rails.application.credentials.config
-    scoped = base.fetch(Rails.env.to_sym)
-    base.delete(Rails.env.to_sym)
-    base.merge(scoped)
-  rescue KeyError
-    raise MissingEnvError, Rails.env
-  end
-
-  def encrypted_credentials_exist?
-    File.exist?(Rails.root.join("config", "credentials.yml.enc"))
-  end
-
-  def master_key_present?
-    return true unless Rails.application.config.require_master_key
-    return true if ENV["RAILS_MASTER_KEY"]
-    return true if File.exist?(Rails.root.join("config", "master.key"))
-
-    false
-  end
-
-  def dummy?
-    ENV.fetch("SECRET_KEY_BASE_DUMMY", nil) == "1"
+    @cache.fetch(mth.to_sym)
   end
 end

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+**NB:** Probably breaking change.
+
+We now rely on YAML for merging credentials. See `bin/rails creds:example` for an example configuration.
+
+- New: Missing keys always raise.
+- Added example task.
+
 ## 0.4.0 (2023-07-08)
 
 ### Added
