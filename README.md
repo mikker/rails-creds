@@ -5,7 +5,7 @@
 `Creds` is …
 
 1. a shortcut for the dreadfully long `Rails.application.credentials` and …
-2. bringing environment scoping back (from when it was called _secrets_)
+2. environment scoped by default
 
 ## Usage
 
