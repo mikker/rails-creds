@@ -51,6 +51,8 @@ module Creds
   end
 
   def self.method_missing(mth, *args, &block)
+    return nil if ENV["SECRET_KEY_BASE_DUMMY"] == "1"
+
     @cache ||= Rails.application.credentials[Rails.env].tap do |scoped|
       raise MissingEnvError.new(Rails.env) unless scoped.is_a?(Hash)
       raise MissingKeyError.new(mth, Rails.env) unless scoped.key?(mth.to_sym)
