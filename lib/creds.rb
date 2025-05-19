@@ -51,6 +51,7 @@ module Creds
   end
 
   def self.method_missing(mth, *args, &block)
+    # If this is set, we're likely building a Docker image and so just noop
     return nil if ENV["SECRET_KEY_BASE_DUMMY"] == "1"
 
     @cache ||= Rails.application.credentials[Rails.env].tap do |scoped|

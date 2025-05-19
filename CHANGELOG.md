@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- Noop values if `SECRET_KEY_BASE_DUMMY` is `"1"`
+
 ## 0.5.0
 
 **NB:** Probably breaking change.
